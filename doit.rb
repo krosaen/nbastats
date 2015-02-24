@@ -11,15 +11,36 @@ require 'date'
 require 'prettyprint'
 
 def main
+  team_segments(
+      'Detroit Pistons',
+      [
+          [Date.new(2014, 12, 21), 'Until drop Josh Smith'],
+          [Date.new(2015, 1, 24), 'Until Brandon Jennings Injured'],
+          [Date.new(2015, 2, 20), 'Until Trade DJ,Singler/Jackson Jerebko/Tayshaun']
+      ]
+  )
+
+  # team_segments(
+  #     'Charlotte',
+  #     [
+  #         [Date.new(2015, 1, 24), 'Until Kemba Walker injured'],
+  #     ]
+  # )
+
+  # team_segments(
+  #     'Brooklyn Nets',
+  #     [
+  #         [Date.new(2015, 1, 23), 'Until Teletovic out'],
+  #     ]
+  # )
+
+end
+
+def team_segments(team_name, team_dates)
   today = Date.today
 
   # dates are inclusive to last day of interesting period
-  interesting_dates = [
-      [Date.new(2014, 12, 21), 'Until drop Josh Smith'],
-      [Date.new(2015, 1, 24), 'Until Brandon Jennings Injured'],
-      [Date.new(2015, 2, 20), 'Until Trade DJ,Singler/Jackson Jerebko/Tayshaun'],
-      [today, 'recent']
-  ]
+  interesting_dates = team_dates + [[today, 'recent']]
 
   interesting_date_params = interesting_dates.each_with_index.map do |t, i|
     d, label = t
@@ -51,7 +72,7 @@ def main
   ]
 
   results = all_date_params.map do |dp|
-    team_stats_summary('Detroit Pistons', dp[:season], dp[:date_from], dp[:date_to], interesting_metrics)
+    team_stats_summary(team_name, dp[:season], dp[:date_from], dp[:date_to], interesting_metrics)
   end
   # ['OPP_FTA_RATE', [result, rank], [result, rank]]
   metrics_with_segments = interesting_metrics.zip(results.transpose)
@@ -75,9 +96,9 @@ def team_stats_summary(name, season, date_from, date_to, metrics)
     params['DateTo'] = date_to.strftime('%m/%d/%Y')
   end
   league_stats = merge_team_stats(params)
-  team_stats = league_stats.find {|s| s['TEAM_NAME'] == name}
+  team_stats = league_stats.find {|s| s['TEAM_NAME'].include? name}
   metrics.map do |metric|
-    rank = league_stats.sort_by {|s| -s[metric]}.index {|s| s['TEAM_NAME'] == name} + 1
+    rank = league_stats.sort_by {|s| -s[metric]}.index {|s| s['TEAM_NAME'].include? name} + 1
     [team_stats[metric], rank]
   end
 
