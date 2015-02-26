@@ -71,8 +71,10 @@ def team_segments(team_name, team_dates)
       'FG3A', 'FG3_PCT'
   ]
 
+  invert_rankings = ['L', 'DEF_RATING', 'OPP_EFG_PCT', 'TM_TOV_PCT', 'OPP_OREB_PCT', 'OPP_FTA_RATE']
+
   results = all_date_params.map do |dp|
-    team_stats_summary(team_name, dp[:season], dp[:date_from], dp[:date_to], interesting_metrics)
+    team_stats_summary(team_name, dp[:season], dp[:date_from], dp[:date_to], interesting_metrics, invert_rankings)
   end
   # ['OPP_FTA_RATE', [result, rank], [result, rank]]
   metrics_with_segments = interesting_metrics.zip(results.transpose)
@@ -85,7 +87,7 @@ def team_segments(team_name, team_dates)
   end
 end
 
-def team_stats_summary(name, season, date_from, date_to, metrics)
+def team_stats_summary(name, season, date_from, date_to, metrics, invert_rankings)
   params = {
       'Season' => season
   }
@@ -98,7 +100,9 @@ def team_stats_summary(name, season, date_from, date_to, metrics)
   league_stats = merge_team_stats(params)
   team_stats = league_stats.find {|s| s['TEAM_NAME'].include? name}
   metrics.map do |metric|
-    rank = league_stats.sort_by {|s| -s[metric]}.index {|s| s['TEAM_NAME'].include? name} + 1
+    sorted = league_stats.sort_by { |s| -s[metric] }
+    sorted = sorted.reverse if invert_rankings.include? metric
+    rank = sorted.index {|s| s['TEAM_NAME'].include? name} + 1
     [team_stats[metric], rank]
   end
 
