@@ -14,25 +14,9 @@ def main
   team_segments(
       'Detroit Pistons',
       [
-          [Date.new(2014, 12, 21), 'Until drop Josh Smith'],
-          [Date.new(2015, 1, 24), 'Until Brandon Jennings Injured'],
-          [Date.new(2015, 2, 20), 'Until Trade DJ,Singler/Jackson Jerebko/Tayshaun']
+          # [Date.new(2014, 12, 21), 'Until drop Josh Smith'],
       ]
   )
-
-  # team_segments(
-  #     'Charlotte',
-  #     [
-  #         [Date.new(2015, 1, 24), 'Until Kemba Walker injured'],
-  #     ]
-  # )
-
-  # team_segments(
-  #     'Brooklyn Nets',
-  #     [
-  #         [Date.new(2015, 1, 23), 'Until Teletovic out'],
-  #     ]
-  # )
 
 end
 
@@ -46,7 +30,7 @@ def team_segments(team_name, team_dates)
     d, label = t
     previous_d = i > 0 ? interesting_dates[i - 1][0] : nil
     {
-        season: '2014-15',
+        season: '2015-16',
         label: label,
         date_from: previous_d,
         date_to: d
@@ -54,8 +38,8 @@ def team_segments(team_name, team_dates)
   end
 
   all_date_params = [
-      {season: '2013-14', label: '2013-14', date_from: nil, date_to: nil},
-      {season: '2014-15', label: '2014-15 to date', date_from: nil, date_to: today}
+      {season: '2014-15', label: '2014-15', date_from: nil, date_to: nil},
+      {season: '2015-16', label: '2015-16 to date', date_from: nil, date_to: today}
   ] + interesting_date_params
 
   interesting_metrics = [
@@ -168,7 +152,7 @@ def fetch_league_stats(params={})
   url_params = merge_valid_params(
       url_params,
       {'MeasureType' => ['Base', 'Advanced', 'Four Factors'],
-       'Season' => ['2013-14', '2014-15']
+       'Season' => ['2013-14', '2014-15', '2015-16']
       },
       params
   )
