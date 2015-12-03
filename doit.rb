@@ -14,7 +14,8 @@ def main
   team_segments(
       'Detroit Pistons',
       [
-          # [Date.new(2014, 12, 21), 'Until drop Josh Smith'],
+          [Date.new(2015, 11, 8), '5-1 hot start'],
+          [Date.new(2015, 11, 16), 'brutal road trip'],
       ]
   )
 
@@ -52,7 +53,8 @@ def team_segments(team_name, team_dates)
       'FTA_RATE', 'OPP_FTA_RATE',
       # MISC
       'PACE',
-      'FG3A', 'FG3_PCT'
+      'FG3A', 'FG3_PCT',
+      'AST_PCT'
   ]
 
   invert_rankings = ['L', 'DEF_RATING', 'OPP_EFG_PCT', 'TM_TOV_PCT', 'OPP_OREB_PCT', 'OPP_FTA_RATE']
