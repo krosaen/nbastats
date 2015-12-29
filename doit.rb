@@ -14,8 +14,7 @@ def main
   team_segments(
       'Detroit Pistons',
       [
-          [Date.new(2015, 11, 8), '5-1 hot start'],
-          [Date.new(2015, 11, 16), 'brutal road trip'],
+          [Date.new(2015, 11, 26), 'first 15 games'],
       ]
   )
 
