@@ -15,6 +15,7 @@ def main
       'Detroit Pistons',
       [
           [Date.new(2015, 11, 26), 'first 15 games'],
+          [Date.new(2016, 1, 1), 'rest of 2015']
       ]
   )
 
