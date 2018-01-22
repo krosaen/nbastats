@@ -14,9 +14,16 @@ def main
   team_segments(
       'Detroit Pistons',
       [
-          [Date.new(2015, 11, 26), 'first 15 games'],
-          [Date.new(2016, 1, 1), 'through EOY'],
-          [Date.new(2016, 2, 11), 'until allstar break, added Tobias'],
+          # [Date.new(2016, 12, 3), 'until reggie comes back'],
+          # [Date.new(2016, 12, 22), 'John Leuer starts'],
+          # [Date.new(2017, 1, 9), 'John Leuer and/or KCP out'],
+          # # [Date.new(2017, 1, 13), 'KCP out'],
+          # # [Date.new(2017, 1, 21), 'John Leuer back'],
+          # [Date.new(2017, 1, 22), 'Full Strength'],
+          # [Date.new(2016, 1, 1), 'through EOY'],
+          # [Date.new(2016, 2, 11), 'until allstar break, added Tobias'],
+          [Date.new(2017, 12, 27), 'until Reggie injury'],
+
           # recent is implicit
       ]
   )
@@ -33,7 +40,7 @@ def team_segments(team_name, team_dates)
     d, label = t
     previous_d = i > 0 ? interesting_dates[i - 1][0] : nil
     {
-        season: '2015-16',
+        season: '2017-18',
         label: label,
         date_from: previous_d,
         date_to: d
@@ -42,7 +49,8 @@ def team_segments(team_name, team_dates)
 
   all_date_params = [
       {season: '2014-15', label: '2014-15', date_from: nil, date_to: nil},
-      {season: '2015-16', label: '2015-16 to date', date_from: nil, date_to: today}
+      {season: '2015-16', label: '2015-16', date_from: nil, date_to: nil},
+      {season: '2016-17', label: '2016-17', date_from: nil, date_to: nil},
   ] + interesting_date_params
 
   interesting_metrics = [
@@ -156,7 +164,7 @@ def fetch_league_stats(params={})
   url_params = merge_valid_params(
       url_params,
       {'MeasureType' => ['Base', 'Advanced', 'Four Factors'],
-       'Season' => ['2013-14', '2014-15', '2015-16']
+       'Season' => ['2013-14', '2014-15', '2015-16', '2016-17', '2017-18']
       },
       params
   )
@@ -168,6 +176,7 @@ def fetch_league_stats(params={})
   end
 
   fetch_cached_url('http://stats.nba.com/stats/leaguedashteamstats', url_params)
+  # example_url = 'http://stats.nba.com/stats/leaguedashteamstats?Conference=&DateFrom=12%2F01%2F2017&DateTo=&Division=&GameScope=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Advanced&Month=0&OpponentTeamID=0&Outcome=&PORound=0&PaceAdjust=N&PerMode=PerGame&Period=0&PlayerExperience=&PlayerPosition=&PlusMinus=N&Rank=N&Season=2017-18&SeasonSegment=&SeasonType=Regular+Season&ShotClockRange=&StarterBench=&TeamID=0&VsConference=&VsDivision='
   # y = 'http://stats.nba.com/stats/leaguedashteamstats?DateFrom=&DateTo=&GameScope=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Advanced&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=Totals&Period=0&PlayerExperience=&PlayerPosition=&PlusMinus=N&Rank=N&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&StarterBench=&VsConference=&VsDivision='
 end
 
@@ -207,8 +216,21 @@ end
 def fetch_http(url)
   url = URI.parse(url)
   $stderr.puts url.request_uri
-  req = Net::HTTP::Get.new(url.request_uri, {'User-Agent' => 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36'})
+  req = Net::HTTP::Get.new(
+    url.request_uri, 
+    {'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
+      'x-nba-stats-origin' => 'stats',
+      'x-nba-stats-token' => 'true',
+      'referer' => 'http://stats.nba.com',
+      'Host' => 'stats.nba.com',
+      'DNT' => '1',
+      'Accept' => 'application/json, text/plain, */*',
+      'Accept-Encoding' => 'identity',
+      # 'Accept-Encoding' => 'gzip, deflate',
+      'Accept-Language' => 'en-US,en;q=0.9',
+      })
   res = Net::HTTP.start(url.host, url.port) {|http| http.request(req) }
+  # puts(res.body)
   res.body
 end
 
