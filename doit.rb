@@ -23,7 +23,7 @@ def main
           # [Date.new(2016, 1, 1), 'through EOY'],
           # [Date.new(2016, 2, 11), 'until allstar break, added Tobias'],
           [Date.new(2017, 12, 27), 'until Reggie injury'],
-
+          [Date.new(2018, 1, 31), 'until Blake'],
           # recent is implicit
       ]
   )
